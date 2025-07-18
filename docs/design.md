@@ -7,7 +7,7 @@
     - [Route Coupling](#route-coupling)
     - [App Hydration](#app-hydration)
   - [Cypress and Playwright](#cypress-and-playwright)
-  - [Packaging for Deployment](#packaging-for-deployment)
+  - [Web Server vs API](#web-server-vs-api)
 
 ## Nx Tooling
 
@@ -58,6 +58,6 @@ I've chosen to use Cypress for a very important, differentiating reason. Playwri
 
 > Ask me how I normally test and assert that components "look right."
 
-## Packaging for Deployment
+## Web Server vs API
 
-I've opted to skip this step for the sake of the demo. Although there are circumstances that may dictate a specific deployment packaging, my go to in most cases is to package as a versioned container. I'd favor a Linux container if possible; given Windows-based containers do not work well with Linux-based ones for deployments to k8s, etc.
+I've opted to combine the web server and API for the sake of brevity with the demo. In most production environments, I'd recommend splitting these into two separate deployable units.

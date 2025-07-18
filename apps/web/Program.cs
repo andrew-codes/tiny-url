@@ -1,13 +1,21 @@
+using System.Text.Json;
+using AdroitTT.Web.Features.ShortenUrl;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.FileProviders;
 using TinyUrl.Web.Feature.UI;
-
+using TinyUrl.Web.Features.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+  options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
 builder.Services.AddTransient<UIController>();
+builder.Services.AddSingleton<ICreateId, Base62IdCreation>();
+builder.Services.AddSingleton<IPersistShortUrl, InMemoryShortUrlStore>();
 
 var app = builder.Build();
 
@@ -54,31 +62,35 @@ app.Use(async (context, next) =>
   }
 });
 
+
 var clientRouting = new ClientRouting(staticFilesPath, appPrefix);
-app.MapFallback("{*path:nonfile}", async context =>
+app.MapWhen((ctx) => !ctx.Request.Path.StartsWithSegments("/api") && !ctx.Request.Path.StartsWithSegments("/s"), apiApp =>
 {
-  var routeData = new RouteData();
-  var actionDescriptor = new ControllerActionDescriptor();
-  var actionContext = new ActionContext(context, routeData, actionDescriptor);
-
-  var controller = context.RequestServices.GetService(typeof(UIController)) as UIController;
-  if (controller == null)
+  apiApp.Use(async (context, next) =>
   {
-    return;
-  }
-  controller.ControllerContext = new ControllerContext(actionContext);
+    Console.WriteLine($"Fallback for request path: {context.Request.Path.Value}");
+    var routeData = new RouteData();
+    var actionDescriptor = new ControllerActionDescriptor();
+    var actionContext = new ActionContext(context, routeData, actionDescriptor);
 
-  var scriptPath = clientRouting.PageApp(context);
-  if (scriptPath == null)
-  {
-    throw new NotFoundHttpException($"Static file not found for request path '{context.Request.Path.Value}'");
-  }
+    if (context.RequestServices.GetService(typeof(UIController)) is not UIController controller)
+    {
+      throw new NotFoundHttpException("UIController not found in services");
+    }
+    controller.ControllerContext = new ControllerContext(actionContext);
 
-  var result = controller.Index(actionContext, scriptPath);
-  if (result is ViewResult viewResult)
-  {
-    await viewResult.ExecuteResultAsync(actionContext);
-  }
+    var scriptPath = clientRouting.PageApp(context) ?? throw new NotFoundHttpException($"Static file not found for request path '{context.Request.Path.Value}'");
+    var result = controller.Index(actionContext, scriptPath);
+    if (result is ViewResult viewResult)
+    {
+      await viewResult.ExecuteResultAsync(actionContext);
+      return;
+    }
+    await next();
+  });
 });
+
+
+app.MapControllers();
 
 app.Run();
