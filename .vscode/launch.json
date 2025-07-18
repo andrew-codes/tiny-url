@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug .NET Web Server",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "TinyUrl.Web",
+      "justMyCode": true
+    },
+    {
+      "name": "Debug Edge",
+      "type": "pwa-msedge",
+      "request": "attach",
+      "sourceMaps": true,
+      "urlFilter": "http://localhost:5289*",
+      "trace": true,
+      "port": 9222,
+      "webRoot": "${workspaceFolder}/dist/apps/client"
+    },
+    {
+      "name": "Debug Chrome",
+      "type": "pwa-chrome",
+      "request": "attach",
+      "sourceMaps": true,
+      "urlFilter": "http://localhost:5289*",
+      "trace": true,
+      "port": 9222,
+      "webRoot": "${workspaceFolder}/dist/apps/client"
+    }
+  ]
+}

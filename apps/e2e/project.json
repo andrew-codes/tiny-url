@@ -1,0 +1,44 @@
+{
+  "name": "e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/client-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["client", "web"],
+  "// targets": "to see all targets run: nx show project client-e2e --web",
+  "targets": {
+    "open-chromium": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "chromium --remote-debugging-port=9222 --force-zoom-factor=1 http://localhost:5289 --no-sandbox"
+      }
+    },
+    "open-cypress": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["web:terminate"],
+      "options": {
+        "command": "yarn cypress open --config-file cypress.config.ts",
+        "env": { "START_COMMAND": "yarn nx start e2e", "CYPRESS_REMOTE_DEBUGGING_PORT": "9222" },
+        "cwd": "{projectRoot}"
+      }
+    },
+    "run-cypress": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "dependsOn": ["web:terminate"],
+      "options": {
+        "command": "yarn cypress run --config-file cypress.config.ts",
+        "env": { "START_COMMAND": "yarn nx start e2e", "CYPRESS_REMOTE_DEBUGGING_PORT": "9222" },
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["web:terminate"],
+      "options": {
+        "command": "yarn nx run-many --target=start --projects=web,client --parallel",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

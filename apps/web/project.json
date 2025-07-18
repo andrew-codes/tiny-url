@@ -1,0 +1,31 @@
+{
+  "name": "web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/web",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project web --web",
+  "targets": {
+    "terminate": {
+      "executor": "nx:run-commands",
+      "options": { "command": "lsof -ti:5289 | xargs -r kill -9" }
+    },
+    "start": {
+      "executor": "@nx-dotnet/core:serve",
+      "dependsOn": ["terminate"],
+      "options": {
+        "configuration": "Development",
+        "args": ["--no-launch-profile", "--urls", "http://localhost:5289", "--hot-reload"]
+      },
+      "configurations": {
+        "production": {
+          "configuration": "Release"
+        },
+        "development": {
+          "configuration": "Development"
+        }
+      }
+    }
+  },
+  "implicitDependencies": ["client"]
+}

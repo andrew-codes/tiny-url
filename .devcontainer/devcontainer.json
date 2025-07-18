@@ -1,0 +1,70 @@
+{
+  "image":"mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2":"latest",
+   "ghcr.io/devcontainers/features/node:1": {
+    "version": "22.17.0"
+   },
+   "ghcr.io/devcontainers/features/docker-in-docker:2":{},
+   "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    },
+    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
+  },
+    "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          }
+        },
+        "workbench.colorTheme": "Dracula Pro"
+      },
+      "extensions": [
+        "arcanis.vscode-zipfs",
+        "bierner.github-markdown-preview",
+        "bierner.markdown-yaml-preamble",
+        "capaj.vscode-exports-autocomplete",
+        "cmstead.js-codeformer",
+        "DavidAnson.vscode-markdownlint",
+        "dbaeumer.vscode-eslint",
+        "dracula-theme-pro.theme-dracula-pro",
+        "drKnoxy.eslint-disable-snippets",
+        "eamodio.gitlens",
+        "EditorConfig.EditorConfig",
+        "emeraldwalk.RunOnSave",
+        "esbenp.prettier-vscode",
+        "GitHub.copilot-chat",
+        "GitHub.copilot",
+        "hbenl.vscode-test-explorer-liveshare",
+        "hbenl.vscode-test-explorer",
+        "humao.rest-client",
+        "johnuphoff.vscode-styled-sort",
+        "kisstkondoros.vscode-codemetrics",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.vscodeintellicode-csharp",
+        "ms-edgedevtools.vscode-edge-devtools",
+        "ms-vsliveshare.vsliveshare",
+        "nrwl.angular-console",
+        "Orta.vscode-jest",
+        "paulmolluzzo.convert-css-in-js",
+        "pflannery.vscode-versionlens",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "sburg.vscode-javascript-booster",
+        "steoates.autoimport",
+        "streetsidesoftware.code-spell-checker",
+        "styled-components.vscode-styled-components",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  },
+  "remoteUser": "root",
+  "postCreateCommand": "./.devcontainer/postCreate.sh",
+  "forwardPorts": [5289, 9222]
+}

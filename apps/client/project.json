@@ -1,0 +1,25 @@
+{
+  "name": "client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/client/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/client/jest.config.ts"
+      }
+    },
+    "start": {
+      "executor": "@nx/vite:build",
+      "cache": false,
+      "options": {
+        "outputPath": "dist/apps/client",
+        "tsConfig": "apps/client/tsconfig.json",
+        "watch": true
+      }
+    }
+  }
+}
