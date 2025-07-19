@@ -7,6 +7,6 @@ namespace TinyUrl.Web.Features.Persistence
 
     Task ClearAll();
 
-    Task<IEnumerable<(string Id, LongUrl LongUrl)>> GetAll();
+    Task<IEnumerable<KeyValuePair<string, LongUrl>>> GetAll();
   }
 }

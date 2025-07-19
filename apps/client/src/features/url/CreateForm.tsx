@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
-import { FC, useCallback, useState } from "react"
+import { merge } from "lodash"
+import { FC, useCallback, useReducer } from "react"
 import { Button } from "../components/Button"
 import { TextField } from "../components/TextField"
 
@@ -9,13 +10,27 @@ const Form = styled.form`
   gap: 1rem;
 `
 
+type ErrorState = Record<string, string>
+type ErrorActions =
+  | { type: "SET_ERROR"; payload: { field: string; message: string } }
+  | { type: "CLEAR_ERRORS" }
+
 const CreateForm: FC<{
   onCreate: (
     evt: React.FormEvent<HTMLFormElement>,
     data: { longUrl: string; shortUrl: string },
   ) => void
 }> = ({ onCreate }) => {
-  const [error, setError] = useState<string | false>(false)
+  const [error, dispatch] = useReducer((state: ErrorState, action: ErrorActions) => {
+    switch (action.type) {
+      case "SET_ERROR":
+        return merge({}, state, { [action.payload.field]: action.payload.message })
+      case "CLEAR_ERRORS":
+        return {}
+      default:
+        return state
+    }
+  }, {} as ErrorState)
 
   const handleSubmit = useCallback(
     (evt: React.FormEvent<HTMLFormElement>) => {
@@ -23,18 +38,28 @@ const CreateForm: FC<{
       const form = evt.target as HTMLFormElement
       const data = new FormData(form)
       if (!data.get("longUrl")) {
-        setError("URL is required")
+        dispatch({ type: "SET_ERROR", payload: { field: "longUrl", message: "URL is required" } })
         return
       }
 
-      setError(false)
+      dispatch({ type: "CLEAR_ERRORS" })
       fetch("/api/url/short", {
         method: "POST",
-        body: JSON.stringify({ longUrl: data.get("longUrl") }),
+        body: JSON.stringify({
+          longUrl: data.get("longUrl"),
+          vanityPath: data.get("vanityPath") ?? null,
+        }),
         headers: { "Content-Type": "application/json" },
       })
-        .then((res) => res.json())
-        .then((result) => {
+        .then((res) => {
+          return new Promise((resolve) => {
+            res.json().then((result) => resolve([res, result]))
+          }) as Promise<[Response, { shortUrl?: string; error?: string }]>
+        })
+        .then(([res, result]) => {
+          if (!res.ok) {
+            return Promise.reject(result.error || "Unknown error")
+          }
           if (!result?.shortUrl) {
             return Promise.reject("No shortUrl returned from API")
           }
@@ -42,8 +67,21 @@ const CreateForm: FC<{
           onCreate(evt, { longUrl: data.get("longUrl") as string, shortUrl: result.shortUrl })
         })
         .catch((err) => {
-          setError("There was a problem creating the short URL. Please try again.")
-          console.error("Error creating short URL:", err)
+          console.error("Error creating short URL", err)
+          if (err?.toString().includes("Duplicate")) {
+            dispatch({
+              type: "SET_ERROR",
+              payload: { field: "vanityPath", message: "Vanity Path already exists." },
+            })
+            return
+          }
+          dispatch({
+            type: "SET_ERROR",
+            payload: {
+              field: "form",
+              message: "There was an unknown problem creating the short URL. Please try again.",
+            },
+          })
         })
     },
     [onCreate],
@@ -56,15 +94,18 @@ const CreateForm: FC<{
         name="longUrl"
         type="url"
         label="URL"
-        error={error}
+        error={error.longUrl}
         hintText="Enter a long URL"
-        startAdornment={
-          <span role="img" aria-label="link">
-            🔗
-          </span>
-        }
+      />
+      <TextField
+        name="vanityPath"
+        type="url"
+        label="Vanity Path (optional)"
+        hintText="Enter a vanity path (e.g. my-cool-link)"
+        error={error.vanityPath}
       />
       <Button type="submit">Shorten URL</Button>
+      {error.form && <div style={{ color: "red" }}>{error.form}</div>}
     </Form>
   )
 }

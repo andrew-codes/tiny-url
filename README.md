@@ -13,7 +13,10 @@ This repo supports multiple, inter-dependent projects across technology boundari
 
 - [x] TextField
 - [x] Button
-- [ ] List
+- [x] List
+- [x] Vanity URLs
+- [x] Textfield focus on label bug
+- [ ] Delete short URLs
 - [ ] Document tasks
   - [ ] Verify all tasks work properly
 - [ ] Document changes required at scale

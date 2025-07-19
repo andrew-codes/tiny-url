@@ -5,7 +5,7 @@ describe("Button", () => {
     cy.mount(<Button>Click me</Button>)
 
     cy.get('[data-test-id="button"]').compareSnapshot({
-      name: "button-clicked",
+      name: "button",
       cypressScreenshotOptions: {
         disableTimersAndAnimations: true,
       },

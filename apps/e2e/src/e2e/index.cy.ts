@@ -88,4 +88,62 @@ describe("Index page.", () => {
         .should("contain.text", `${i + 1}`)
     }
   })
+
+  it(`Vanity URL creation.
+    - Create a shortened URL with a vanity path.
+    - Shortened URL is displayed on the page.`, () => {
+    cy.intercept("POST", "/api/url/short").as("shortenUrl")
+
+    cy.get("form").within(() => {
+      cy.get('input[name="longUrl"]').type("https://andrew.codes")
+      cy.get('input[name="vanityPath"]').type("my-cool-link")
+      cy.get('button[type="submit"]').click()
+    })
+    cy.wait("@shortenUrl").then((interception) => {
+      expect(interception?.response?.statusCode).to.eq(201)
+      expect(interception?.response?.body).to.have.property("shortUrl")
+      cy.wrap(interception?.response?.body.shortUrl).as("shortenedUrlResponse")
+    })
+
+    cy.get("table").within(() => {
+      cy.get("tbody tr").its("length").should("be.gte", 1)
+      cy.get("tbody tr").first().find("td").first().contains("a", "my-cool-link").click()
+    })
+    cy.url().should("eq", "https://andrew.codes/")
+    cy.go("back")
+  })
+
+  it.only(`Duplicate vanity URL creation.
+    - Creates first one.
+    - Errors shown on second attempt; URL is not created or updated.`, () => {
+    cy.intercept("POST", "/api/url/short").as("shortenUrl")
+
+    cy.get("form").within(() => {
+      cy.get('input[name="longUrl"]').type("https://andrew.codes")
+      cy.get('input[name="vanityPath"]').type("my-cool-link")
+      cy.get('button[type="submit"]').click()
+    })
+    cy.wait("@shortenUrl").then((interception) => {
+      expect(interception?.response?.statusCode).to.eq(201)
+      expect(interception?.response?.body).to.have.property("shortUrl")
+      cy.wrap(interception?.response?.body.shortUrl).as("shortenedUrlResponse")
+    })
+
+    cy.get("form").within(() => {
+      cy.get('input[name="longUrl"]').type("https://github.com/andrew-codes")
+      cy.get('input[name="vanityPath"]').type("my-cool-link")
+      cy.get('button[type="submit"]').click()
+    })
+    cy.wait("@shortenUrl").then((interception) => {
+      expect(interception?.response?.statusCode).to.eq(400)
+      expect(interception?.response?.body).to.contain("Short URL already exists.")
+    })
+
+    cy.get("table").within(() => {
+      cy.get("tbody tr").its("length").should("be.gte", 1)
+      cy.get("tbody tr").first().find("td").first().contains("a", "my-cool-link").click()
+    })
+    cy.url().should("eq", "https://andrew.codes/")
+    cy.go("back")
+  })
 })

@@ -115,11 +115,7 @@ const TextField: FC<{
     const resolvedRef = (inputRef as React.RefObject<HTMLInputElement>) || internalRef
 
     useEffect(() => {
-      if (resolvedRef.current == null) {
-        return
-      }
-
-      if (resolvedRef.current.value === "") {
+      if (resolvedRef.current?.value === "") {
         setValue("")
       }
     }, [resolvedRef])
@@ -146,6 +142,9 @@ const TextField: FC<{
               }}
               onBlur={(evt: React.FocusEvent<HTMLInputElement>) => {
                 setFocused(false)
+              }}
+              onChange={(evt: React.ChangeEvent<HTMLInputElement>) => {
+                setValue(evt.target.value)
               }}
             />
             {label && (

@@ -24,9 +24,10 @@ namespace TinyUrl.Web.Features.Persistence
       return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<(string Id, LongUrl LongUrl)>> GetAll()
+    public Task<IEnumerable<KeyValuePair<string, LongUrl>>> GetAll()
     {
-      var allUrls = _store.Select(kvp => (Id: kvp.Key, LongUrl: kvp.Value)).OrderBy(t => t.Id);
+      var allUrls = _store.OrderBy(kvp => kvp.Key)
+                          .Select(kvp => new KeyValuePair<string, LongUrl>(kvp.Key, kvp.Value));
       return Task.FromResult(allUrls.AsEnumerable());
     }
   }

@@ -20,7 +20,7 @@ describe("CreateForm", () => {
   it(`Form submits.`, () => {
     const shortUrl = "http://short.url/abc123"
     cy.intercept("POST", "/api/url/short", {
-      statusCode: 200,
+      statusCode: 201,
       body: { shortUrl },
     }).as("createUrl")
     const onCreate = cy.stub().as("onCreate")
@@ -37,5 +37,22 @@ describe("CreateForm", () => {
 
     cy.wait("@createUrl")
     cy.get('input[name="longUrl"]').should("have.value", "")
+  })
+
+  it(`Form handles API error.`, () => {
+    cy.intercept("POST", "/api/url/short", {
+      statusCode: 400,
+      body: { error: "Duplicate" },
+    }).as("createUrl")
+    const onCreate = cy.stub().as("onCreate")
+
+    cy.mount(<CreateForm onCreate={onCreate} />)
+
+    cy.get('input[name="longUrl"]').focus().type("https://example.com")
+    cy.get('button[type="submit"]').click()
+    cy.get("@onCreate").should("not.have.been.called")
+
+    cy.wait("@createUrl")
+    cy.get('[data-test-id="textfield"]').eq(1).contains("Vanity Path already exists.")
   })
 })
