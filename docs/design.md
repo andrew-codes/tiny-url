@@ -8,6 +8,7 @@
     - [App Hydration](#app-hydration)
   - [Cypress and Playwright](#cypress-and-playwright)
   - [Web Server vs API](#web-server-vs-api)
+  - [State Management](#state-management)
 
 ## Nx Tooling
 
@@ -61,3 +62,7 @@ I've chosen to use Cypress for a very important, differentiating reason. Playwri
 ## Web Server vs API
 
 I've opted to combine the web server and API for the sake of brevity with the demo. In most production environments, I'd recommend splitting these into two separate deployable units.
+
+## State Management
+
+I opted for plain React state and native fetch. One drawback to this approach is that there are fetch libraries that can handle network-level caching that we are losing out on. In a real-world application, I would recommend to have this capability and build upon it.

@@ -20,6 +20,6 @@ This repo supports multiple, inter-dependent projects across technology boundari
 - [x] Delete short URLs
 - [x] Document tasks
   - [x] Verify all tasks work properly
-- [ ] Document changes required at scale
+- [x] Document changes required at scale
 - [ ] Verify visual regressions on non-retina screen
 - [x] Verify debugging
