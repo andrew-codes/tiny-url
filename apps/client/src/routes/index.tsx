@@ -1,6 +1,14 @@
+import styled from "@emotion/styled"
 import { FC, StrictMode, useEffect, useState } from "react"
 import * as ReactDOM from "react-dom/client"
+import { GlobalStyles } from "../features/components/GlobalStyles"
+import { SimpleTable } from "../features/components/SimpleTable"
 import { CreateForm } from "../features/url/CreateForm"
+
+const Container = styled.div`
+  margin: 0 auto;
+  padding: 20px;
+`
 
 const App: FC = () => {
   const [shortenedUrls, setShortenedUrls] = useState<Array<{ shortUrl: string }>>([])
@@ -19,17 +27,16 @@ const App: FC = () => {
   }, [])
 
   return (
-    <div>
+    <Container>
       <CreateForm
         onCreate={(evt, data) => {
           setShortenedUrls((prev) => [...prev, { shortUrl: data.shortUrl, accessCount: 0 }])
         }}
       />
-      <table>
+      <SimpleTable>
         <thead>
           <tr>
-            <th>Shortened URLs</th>
-            <th>Access Count</th>
+            <th colSpan={2}>Short Links</th>
           </tr>
         </thead>
         <tbody>
@@ -44,14 +51,15 @@ const App: FC = () => {
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </SimpleTable>
+    </Container>
   )
 }
 
 const root = ReactDOM.createRoot(document.getElementById("app") as HTMLElement)
 root.render(
   <StrictMode>
+    <GlobalStyles />
     <App />
   </StrictMode>,
 )

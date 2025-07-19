@@ -114,7 +114,8 @@ describe("textfield", () => {
     )
 
     cy.get("[data-test-id=capture").compareSnapshot("label-no-value")
-    cy.get("input").first().focus().type("abc")
+    cy.get("label").first().click()
+    cy.focused().type("abc")
     cy.get("[data-test-id=capture").compareSnapshot("label-with-value")
   })
 

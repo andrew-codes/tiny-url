@@ -7,9 +7,6 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "vite",
-      viteConfig: {
-        configFile: "vite.config.ts",
-      },
     },
     setupNodeEvents: (on, config) => {
       on("before:browser:launch", (browser = {}, launchOptions) => {

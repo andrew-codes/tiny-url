@@ -1,12 +1,10 @@
 import styled from "@emotion/styled"
-import { FC, ReactNode, useRef, useState } from "react"
+import { FC, forwardRef, ReactNode, useEffect, useRef, useState } from "react"
 
 const TextFieldContainer = styled.div`
   display: flex;
   background: white;
   flex-direction: column;
-  border: 1px solid black;
-  border-radius: 0.25rem;
   padding: 0 0.25rem 0.25rem;
   box-sizing: border-box;
   height: 3rem;
@@ -82,78 +80,104 @@ const TextField: FC<{
   name?: string
   type?: HTMLInputElement["type"]
   required?: boolean
-}> = ({
-  defaultValue = "",
-  endAdornment,
-  error,
-  label,
-  hintText,
-  name,
-  required,
-  type,
-  startAdornment,
-}) => {
-  const [focused, setFocused] = useState(false)
+}> = forwardRef<
+  HTMLInputElement,
+  {
+    defaultValue?: string
+    label?: string
+    hintText?: ReactNode
+    startAdornment?: ReactNode
+    endAdornment?: ReactNode
+    error?: string | boolean
+    name?: string
+    type?: HTMLInputElement["type"]
+    required?: boolean
+  }
+>(
+  (
+    {
+      defaultValue = "",
+      endAdornment,
+      error,
+      label,
+      hintText,
+      name,
+      required,
+      type,
+      startAdornment,
+    },
+    inputRef,
+  ) => {
+    const [focused, setFocused] = useState(false)
+    const [value, setValue] = useState(defaultValue)
 
-  const [value, setValue] = useState(defaultValue)
-  const inputRef = useRef<HTMLInputElement>(null)
+    const internalRef = useRef<HTMLInputElement>(null)
+    const resolvedRef = (inputRef as React.RefObject<HTMLInputElement>) || internalRef
 
-  return (
-    <TextFieldContainer data-test-id="textfield">
-      <div>
-        <StartAdornment
-          data-test-id="adornment"
-          onClick={() => {
-            inputRef.current?.focus()
-          }}
-        >
-          {startAdornment}
-        </StartAdornment>
-        <InputContainer>
-          <Input
-            type="text"
-            ref={inputRef}
-            name={name}
-            onFocus={(evt) => {
-              setFocused(true)
+    useEffect(() => {
+      if (resolvedRef.current == null) {
+        return
+      }
+
+      if (resolvedRef.current.value === "") {
+        setValue("")
+      }
+    }, [resolvedRef])
+
+    return (
+      <TextFieldContainer data-test-id="textfield">
+        <div>
+          <StartAdornment
+            data-test-id="adornment"
+            onClick={() => {
+              resolvedRef.current?.focus()
             }}
-            onBlur={(evt) => {
-              setFocused(false)
-            }}
-            onChange={(evt) => {
-              setValue(evt.target.value)
-            }}
-            value={value}
-          />
-          {label && (
-            <Label
-              focused={focused}
-              value={value}
-              htmlFor={name}
-              onClick={() => {
-                inputRef.current?.focus()
+          >
+            {startAdornment}
+          </StartAdornment>
+          <InputContainer>
+            <Input
+              defaultValue={defaultValue}
+              type="text"
+              ref={resolvedRef}
+              name={name}
+              onFocus={(evt: React.FocusEvent<HTMLInputElement>) => {
+                setFocused(true)
               }}
-            >
-              <span>
-                {label}
-                {required && "*"}
-              </span>
-            </Label>
-          )}
-        </InputContainer>
-        <EndAdornment
-          data-test-id="adornment"
-          onClick={() => {
-            inputRef.current?.focus()
-          }}
-        >
-          {endAdornment}
-        </EndAdornment>
-        <Line focused={focused} error={!!error} />
-      </div>
-      <HintText error={!!error}>{error ? error : hintText}</HintText>
-    </TextFieldContainer>
-  )
-}
+              onBlur={(evt: React.FocusEvent<HTMLInputElement>) => {
+                setFocused(false)
+              }}
+            />
+            {label && (
+              <Label
+                focused={focused}
+                value={value}
+                htmlFor={name}
+                onClick={() => {
+                  resolvedRef.current?.focus()
+                }}
+              >
+                <span>
+                  {label}
+                  {required && "*"}
+                </span>
+              </Label>
+            )}
+          </InputContainer>
+          <EndAdornment
+            data-test-id="adornment"
+            onClick={() => {
+              resolvedRef.current?.focus()
+            }}
+          >
+            {endAdornment}
+          </EndAdornment>
+          <Line focused={focused} error={!!error} />
+        </div>
+        <HintText error={!!error}>{error ? error : hintText}</HintText>
+      </TextFieldContainer>
+    )
+  },
+)
 
 export { TextField }

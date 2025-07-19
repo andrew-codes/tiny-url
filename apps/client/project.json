@@ -27,12 +27,11 @@
         "cypressConfig": "apps/client/cypress.config.ts",
         "watch": true,
         "testingType": "component",
-        "headless": true,
-        "runnerUi": true
+        "runnerUi": true,
+        "env": { "CYPRESS_REMOTE_DEBUGGING_PORT": "9222" }
       },
       "configurations": {
         "ci": {
-          "headless": true,
           "watch": false
         }
       }
@@ -44,11 +43,9 @@
         "watch": true,
         "testingType": "component",
         "runnerUi": false,
-        "headless": true
       },
       "configurations": {
         "ci": {
-          "headless": true,
           "watch": false
         }
       }

@@ -12,9 +12,10 @@ This repo supports multiple, inter-dependent projects across technology boundari
 ## To Do
 
 - [x] TextField
-- [ ] Button
+- [x] Button
 - [ ] List
 - [ ] Document tasks
   - [ ] Verify all tasks work properly
 - [ ] Document changes required at scale
 - [ ] Verify visual regressions on non-retina screen
+- [ ] Verify debugging

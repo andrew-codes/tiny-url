@@ -34,5 +34,8 @@ describe("CreateForm", () => {
       longUrl: "https://example.com",
       shortUrl: shortUrl,
     })
+
+    cy.wait("@createUrl")
+    cy.get('input[name="longUrl"]').should("have.value", "")
   })
 })

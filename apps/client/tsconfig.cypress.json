@@ -11,6 +11,8 @@
     "src/**/__component_tests__/*.test.tsx",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "cypress/support/**/*.ts",
+    "cypress/support/component.ts",
   ],
 }

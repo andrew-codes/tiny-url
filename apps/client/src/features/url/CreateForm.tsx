@@ -1,5 +1,13 @@
+import styled from "@emotion/styled"
 import { FC, useCallback, useState } from "react"
+import { Button } from "../components/Button"
 import { TextField } from "../components/TextField"
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
 
 const CreateForm: FC<{
   onCreate: (
@@ -42,7 +50,7 @@ const CreateForm: FC<{
   )
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       <TextField
         required
         name="longUrl"
@@ -56,8 +64,8 @@ const CreateForm: FC<{
           </span>
         }
       />
-      <button type="submit">Shorten URL</button>
-    </form>
+      <Button type="submit">Shorten URL</Button>
+    </Form>
   )
 }
 
