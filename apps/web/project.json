@@ -8,7 +8,7 @@
   "targets": {
     "build": {
       "executor": "@nx-dotnet/core:build",
-      "outputs": ["dist/apps/web"],
+      "outputs": ["{workspaceDir}dist/apps/web"],
       "options": {
         "configuration": "Release",
         "noDependencies": true
@@ -43,19 +43,10 @@
       }
     },
     "test/unit": {
-      "executor": "@nx-dotnet/core:test",
-      "dependsOn": ["web.test:build"],
+      "executor": "nx:run-commands",
       "options": {
-        "configuration": "Debug",
-        "noBuild": true
-      },
-      "configurations": {
-        "production": {
-          "configuration": "Release"
-        },
-        "development": {
-          "configuration": "Debug"
-        }
+        "command": "dotnet test",
+        "cwd": "{projectRoot}/../web.Test"
       }
     }
   },

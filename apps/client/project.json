@@ -40,14 +40,9 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/client/cypress.config.ts",
-        "watch": true,
+        "watch": false,
         "testingType": "component",
-        "runnerUi": false,
-      },
-      "configurations": {
-        "ci": {
-          "watch": false
-        }
+        "runnerUi": false
       }
     }
   }

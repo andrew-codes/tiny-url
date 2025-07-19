@@ -56,16 +56,18 @@ yarn nx open-chromium e2e
 
 ### Tests
 
+> Please note that it is recommended to run test/unit tests in vscode for debugging capabilities.
+
 ```bash
 # Run component tests with debugging/for development (includes visual regression testing)
-yarn nx run open-cypress client
+yarn nx open-cypress client
 # View [visual baseline directory](./../apps/client/visual-tests/screenshots/baseline) for visual regression outputs.
 
 # Run all component tests
-yarn nx run test/component client
+yarn nx test/component client
 
 # Run Web server unit tests
-yarn nx run test/unit web
+yarn nx test/unit web
 ```
 
 ### Debugging
@@ -76,6 +78,8 @@ Console.log's are painful, so IDE breakpoints are supported and automatically en
 2. For dotnet, launch the `Debug .NET Web Server` in vscode.
 3. For TS, the browser will need to be launched with [remote debugging enabled](./#enable-browser-remote-debugging). Note that E2E/component tests do this automatically.
    1. Based on your browser, once open to the http://localhost:5289, launch the `Debug with Edge` or `Debug with Chrome`
+
+> Note IDE debugging is not enabled for component tests due to time restrictions.
 
 #### Enable Browser Remote Debugging
 
