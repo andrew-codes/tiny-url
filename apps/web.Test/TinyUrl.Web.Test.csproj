@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\web\TinyUrl.csproj" />
+    <ProjectReference Include="..\web\TinyUrl.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

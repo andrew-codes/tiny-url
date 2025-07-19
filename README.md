@@ -8,3 +8,13 @@ This repo supports multiple, inter-dependent projects across technology boundari
 
 1. [Get started](./docs/getting-started.md) running the project and visiting in your browser; including E2E tests, etc.
 2. Read the [design docs](./docs/design.md) to learn more about the high-level design decisions, their trade-offs, and justifications.
+
+## To Do
+
+- [x] TextField
+- [ ] Button
+- [ ] List
+- [ ] Document tasks
+  - [ ] Verify all tasks work properly
+- [ ] Document changes required at scale
+- [ ] Verify visual regressions on non-retina screen

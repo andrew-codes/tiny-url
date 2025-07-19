@@ -15,6 +15,8 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    }, {
+      "path": "./tsconfig.cypress.json"
     }
   ],
   "extends": "../../tsconfig.base.json"

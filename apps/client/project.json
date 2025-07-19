@@ -5,20 +5,52 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/client/jest.config.ts"
-      }
-    },
-    "start": {
+     "start": {
       "executor": "@nx/vite:build",
       "cache": false,
       "options": {
         "outputPath": "dist/apps/client",
         "tsConfig": "apps/client/tsconfig.json",
         "watch": true
+      }
+    },
+    "test/unit": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/client/jest.config.ts"
+      }
+    },
+    "open-cypress": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/client/cypress.config.ts",
+        "watch": true,
+        "testingType": "component",
+        "headless": true,
+        "runnerUi": true
+      },
+      "configurations": {
+        "ci": {
+          "headless": true,
+          "watch": false
+        }
+      }
+    },
+    "test/component": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/client/cypress.config.ts",
+        "watch": true,
+        "testingType": "component",
+        "runnerUi": false,
+        "headless": true
+      },
+      "configurations": {
+        "ci": {
+          "headless": true,
+          "watch": false
+        }
       }
     }
   }

@@ -6,6 +6,22 @@
   "tags": [],
   "// targets": "to see all targets run: nx show project web --web",
   "targets": {
+    "build": {
+      "executor": "@nx-dotnet/core:build",
+      "outputs": ["dist/apps/web"],
+      "options": {
+        "configuration": "Release",
+        "noDependencies": true
+      },
+      "configurations": {
+        "production": {
+          "configuration": "Release"
+        },
+        "development": {
+          "configuration": "Debug"
+        }
+      }
+    },
     "terminate": {
       "executor": "nx:run-commands",
       "options": { "command": "lsof -ti:5289 | xargs -r kill -9" }
@@ -23,6 +39,22 @@
         },
         "development": {
           "configuration": "Development"
+        }
+      }
+    },
+    "test/unit": {
+      "executor": "@nx-dotnet/core:test",
+      "dependsOn": ["web.test:build"],
+      "options": {
+        "configuration": "Debug",
+        "noBuild": true
+      },
+      "configurations": {
+        "production": {
+          "configuration": "Release"
+        },
+        "development": {
+          "configuration": "Debug"
         }
       }
     }

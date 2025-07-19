@@ -22,7 +22,7 @@
         "cwd": "{projectRoot}"
       }
     },
-    "run-cypress": {
+    "test/e2e": {
       "executor": "nx:run-commands",
       "cache": true,
       "dependsOn": ["web:terminate"],

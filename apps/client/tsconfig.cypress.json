@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "types": ["cypress", "node"]
+  },
+  "include": [
+    "src/**/__component_tests__/*.test.tsx",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "**/*.d.ts"
+  ],
+}

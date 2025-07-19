@@ -20,3 +20,10 @@ dist/
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
+
+**/cypress/videos
+**/cypress/screenshots
+
+**/visual-tests/report
+**/visual-tests/screenshots/comparison
+**/visual-tests/screenshots/diff

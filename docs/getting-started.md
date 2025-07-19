@@ -44,7 +44,7 @@ This demo consists of 2 projects, a dotnet web server and a React front-end. Run
 yarn nx open-cypress e2e
 
 # Or run all e2e tests (useful for running in CI)
-yarn nx run-cypress e2e
+yarn nx test/e2e e2e
 
 # Or start app for browsing
 yarn nx start e2e # Open http://localhost:5289 in browser of choice
@@ -52,6 +52,20 @@ yarn nx start e2e # Open http://localhost:5289 in browser of choice
 # Dev container only
 # In a separate shell, this will open the browser with remote debugging enabled.
 yarn nx open-chromium e2e
+```
+
+### Tests
+
+```bash
+# Run component tests with debugging/for development (includes visual regression testing)
+yarn nx run open-cypress client
+# View [visual baseline directory](./../apps/client/visual-tests/screenshots/baseline) for visual regression outputs.
+
+# Run all component tests
+yarn nx run test/component client
+
+# Run Web server unit tests
+yarn nx run test/unit web
 ```
 
 ### Debugging

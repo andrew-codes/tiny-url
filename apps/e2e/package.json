@@ -16,6 +16,7 @@
     "@nx/react": "21.2.3",
     "@nx/vite": "21.2.3",
     "@nx/web": "21.2.3",
+    "@types/cypress": "^1.1.6",
     "@types/jest": "^30.0.0",
     "@types/node": "24.0.13",
     "@types/react": "19.0.0",
