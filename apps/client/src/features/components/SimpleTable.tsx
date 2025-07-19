@@ -13,6 +13,7 @@ const StyledTable = styled.table`
 
   tr {
     display: flex;
+    align-items: center;
   }
 
   th,
@@ -43,12 +44,15 @@ const StyledTable = styled.table`
     }
 
     &:hover {
-      background-color: #6c63ff;
+      background-color: #ebe8e8;
     }
+  }
 
-    &:hover,
-    &:hover * {
-      color: #fff !important;
+  tbody td {
+    display: flex;
+    padding-right: 1rem;
+    &:last-child {
+      padding-right: 0;
     }
   }
 `

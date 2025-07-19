@@ -8,6 +8,10 @@ namespace TinyUrl.Web.Features.ShortenUrl
     public string LongUrl { get; set; }
     public string? VanityPath { get; set; }
   }
+  public class DeleteShortenUrlRequest
+  {
+    public string ShortUrl { get; set; }
+  }
 
   [ApiController]
   public class ShortenUrlController(ICreateId idCreator, IPersistShortUrl dataStore) : ControllerBase
@@ -66,6 +70,33 @@ namespace TinyUrl.Web.Features.ShortenUrl
       {
         ShortUrl = shortenedUrl
       });
+    }
+
+    [HttpDelete]
+    [Route("api/url/short")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Delete([FromBody] DeleteShortenUrlRequest request)
+    {
+      if (string.IsNullOrWhiteSpace(request.ShortUrl))
+      {
+        return BadRequest("Short URL cannot be empty.");
+      }
+
+      var shortId = request.ShortUrl.Split('/').LastOrDefault();
+      if (string.IsNullOrWhiteSpace(shortId))
+      {
+        return BadRequest("Invalid short URL format.");
+      }
+
+      var longUrl = await _dataStore.Get(shortId);
+      if (longUrl == null)
+      {
+        return NotFound();
+      }
+
+      await _dataStore.Delete(longUrl.Id);
+      return NoContent();
     }
 
     [HttpPost]

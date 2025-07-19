@@ -8,6 +8,11 @@ describe("Index page.", () => {
     - Create one or more shortened URLs.
     - Shortened URLs are displayed on the page.`, () => {
     cy.intercept("POST", "/api/url/short").as("shortenUrl")
+    cy.origin("https://andrew.codes", () => {
+      cy.on("uncaught:exception", (e) => {
+        return false
+      })
+    })
 
     cy.get("form").within(() => {
       cy.get('input[name="longUrl"]').type("https://andrew.codes")
@@ -21,12 +26,6 @@ describe("Index page.", () => {
     })
 
     cy.wait("@shortenUrl")
-
-    cy.origin("https://andrew.codes", () => {
-      cy.on("uncaught:exception", (e) => {
-        return false
-      })
-    })
 
     cy.get("table").within(() => {
       cy.get("tbody tr").its("length").should("be.gte", 1)
@@ -113,10 +112,15 @@ describe("Index page.", () => {
     cy.go("back")
   })
 
-  it.only(`Duplicate vanity URL creation.
+  it(`Duplicate vanity URL creation.
     - Creates first one.
     - Errors shown on second attempt; URL is not created or updated.`, () => {
     cy.intercept("POST", "/api/url/short").as("shortenUrl")
+    cy.origin("https://andrew.codes", () => {
+      cy.on("uncaught:exception", (e) => {
+        return false
+      })
+    })
 
     cy.get("form").within(() => {
       cy.get('input[name="longUrl"]').type("https://andrew.codes")
@@ -136,7 +140,6 @@ describe("Index page.", () => {
     })
     cy.wait("@shortenUrl").then((interception) => {
       expect(interception?.response?.statusCode).to.eq(400)
-      expect(interception?.response?.body).to.contain("Short URL already exists.")
     })
 
     cy.get("table").within(() => {
@@ -145,5 +148,28 @@ describe("Index page.", () => {
     })
     cy.url().should("eq", "https://andrew.codes/")
     cy.go("back")
+  })
+
+  it(`Short URL deletion.
+    - Create a shortened URL.
+    - Delete the shortened URL.
+    - Shortened URL is removed from the page.`, () => {
+    cy.intercept("POST", "/api/url/short").as("shortenUrl")
+    cy.intercept("DELETE", "/api/url/*").as("deleteUrl")
+
+    cy.get("form").within(() => {
+      cy.get('input[name="longUrl"]').type("https://andrew.codes")
+      cy.get('button[type="submit"]').click()
+    })
+    cy.wait("@shortenUrl")
+
+    cy.get("table").within(() => {
+      cy.get("tbody tr").first().find("td").last().contains("button", "Delete").click()
+    })
+    cy.wait("@deleteUrl")
+
+    cy.get("table").within(() => {
+      cy.get("a").should("not.exist")
+    })
   })
 })

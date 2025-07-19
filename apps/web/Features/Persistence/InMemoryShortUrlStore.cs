@@ -30,5 +30,11 @@ namespace TinyUrl.Web.Features.Persistence
                           .Select(kvp => new KeyValuePair<string, LongUrl>(kvp.Key, kvp.Value));
       return Task.FromResult(allUrls.AsEnumerable());
     }
+
+    public Task Delete(string id)
+    {
+      _store.TryRemove(id, out _);
+      return Task.CompletedTask;
+    }
   }
 }
